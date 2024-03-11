@@ -4,11 +4,11 @@ pipeline {
         maven 'maven3.8.5'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/jhonpridedev/spring-petclinic-rest'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git 'https://github.com/jhonpridedev/spring-petclinic-rest'
+        //     }
+        // }
         stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests -B -ntp'
