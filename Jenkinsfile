@@ -14,6 +14,19 @@ pipeline {
             steps {
                 sh 'mvn test -B -ntp'
             }
+            post {
+                // si el step se ejecuta bien, este post tambien se va a ejecutar bien
+                success {
+                    jacoco()  // parla cobertura de preubas unitarias
+                    junit 'target/surefire-reports/*.xml'
+                }
+                always {
+                    echo 'siempre se ejecuta'
+                }
+                failure {
+                    echo 'si falla los test'
+                }
+            }
         }
         stage('Package') {
             steps {
