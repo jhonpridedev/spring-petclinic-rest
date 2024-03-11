@@ -10,7 +10,7 @@ pipeline {
                 sh 'mvn clean compile -B -ntp'
             }
         }
-        stage('Build') {
+        stage('Test') {
             steps {
                 sh 'mvn test -B -ntp'
             }
