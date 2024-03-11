@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn test -DskipTests -B -ntp'
+                sh 'mvn test -B -ntp'
             }
         }
         stage('Package') {
