@@ -28,6 +28,11 @@ pipeline {
                 }
             }
         }
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests -B -ntp'
+            }
+        }
         stage('Sonarqube') {
             steps {
                 withSonarQubeEnv('sonarqube'){
@@ -36,9 +41,12 @@ pipeline {
                 }                
             }
         }
-        stage('Package') {
+        stage('Quality Gate') {
+            // espere 1 hora para la respuesate del sonar sobre codigo scaneado
             steps {
-                sh 'mvn package -DskipTests -B -ntp'
+                timeout(time: 1, unit: 'HOURS'){
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
