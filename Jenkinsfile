@@ -28,6 +28,13 @@ pipeline {
                 }
             }
         }
+        stage('Sonarqube') {
+            steps {
+                withSonarQubeEnv('sonarqube')
+                // si ya se tiene configurado el sonar en jenkins como plugin
+                sh 'mvn sonar:sonar -B -ntp'
+            }
+        }
         stage('Package') {
             steps {
                 sh 'mvn package -DskipTests -B -ntp'
