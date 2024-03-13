@@ -52,23 +52,55 @@ pipeline {
 
 
 
+        // stage('Artifactory') {
+        //     steps {
+        //         script {
+        //             // Forma 1 - Artifactory, viene del plugin instalado
+        //             sh 'printenv'
+        //             // env.MAVEN_HOME = '/usr/share/maven'
+
+        //             def releases = 'spring-petclinic-rest-release'
+        //             def snapshots = 'spring-petclinic-rest-snapshop'
+        //             def server = Artifactory.server 'artifactory'
+        //             def rtMaven = Artifactory.newMavenBuild()
+        //             rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+        //             def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
+        //             server.publishBuildInfo buildInfo
+        //         }
+        //     }
+        // }
+
         stage('Artifactory') {
             steps {
                 script {
-                    // Forma 1 - Artifactory, viene del plugin instalado
-                    sh 'printenv'
-                    // env.MAVEN_HOME = '/usr/share/maven'
+                   // Forma 2 - File Spec
+                    def server = Artifactory .server 'artifactory'
+                    def repository = 'spring-petclinic-rest'
 
-                    def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshop'
-                    def server = Artifactory.server 'artifactory'
-                    def rtMaven = Artifactory.newMavenBuild()
-                    rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
-                    server.publishBuildInfo buildInfo
+                    if("${GIT_BRANCH }" == 'origin/master' ){
+                    repository = repository + '-release'
+                    } else {
+                    repository = repository + '-snapshop'
+                    }
+                    
+                    def uploadSpec = """
+                    {
+                        "files": [
+                            {
+                                "pattern": "target/.*.jar",
+                                "target": " ${repository }",
+                                "regexp": "true"
+                            }
+                        ]
+                    }
+                    """
+                    server.upload spec: uploadSpec
                 }
             }
         }
+
+
+        
     }
     post {
         success {
