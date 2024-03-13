@@ -33,19 +33,39 @@ pipeline {
                 sh 'mvn package -DskipTests -B -ntp'
             }
         }
-        stage('Sonarqube') {
+        // stage('Sonarqube') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube'){
+        //             // si ya se tiene configurado el sonar en jenkins como plugin
+        //             sh 'mvn sonar:sonar -B -ntp'
+        //         }                
+        //     }
+        // }
+        // stage('Quality Gate') {
+        //     // espere 1 hora para la respuesate del sonar sobre codigo scaneado
+        //     steps {
+        //         timeout(time: 1, unit: 'HOURS'){
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+
+
+
+        stage('Artifactory') {
             steps {
-                withSonarQubeEnv('sonarqube'){
-                    // si ya se tiene configurado el sonar en jenkins como plugin
-                    sh 'mvn sonar:sonar -B -ntp'
-                }                
-            }
-        }
-        stage('Quality Gate') {
-            // espere 1 hora para la respuesate del sonar sobre codigo scaneado
-            steps {
-                timeout(time: 1, unit: 'HOURS'){
-                    waitForQualityGate abortPipeline: true
+                script {
+                    // Forma 1 - Artifactory, viene del plugin instalado
+                    sh 'printenv'
+                    // env.MAVEN_HOME = '/usr/share/maven'
+
+                    def releases = 'spring-petclinic-rest-release'
+                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    def server = Artifactory.server 'artifactory'
+                    def rtMaven = Artifactory.newMavenBuild()
+                    rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
+                    server.publishBuildInfo buildInfo
                 }
             }
         }
