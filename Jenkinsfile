@@ -49,27 +49,6 @@ pipeline {
         //         }
         //     }
         // }
-
-
-
-        // stage('Artifactory') {
-        //     steps {
-        //         script {
-        //             // Forma 1 - Artifactory, viene del plugin instalado
-        //             sh 'printenv'
-        //             // env.MAVEN_HOME = '/usr/share/maven'
-
-        //             def releases = 'spring-petclinic-rest-release'
-        //             def snapshots = 'spring-petclinic-rest-snapshop'
-        //             def server = Artifactory.server 'artifactory'
-        //             def rtMaven = Artifactory.newMavenBuild()
-        //             rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-        //             def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
-        //             server.publishBuildInfo buildInfo
-        //         }
-        //     }
-        // }
-
         stage('Artifactory') {
             steps {
                 script {
@@ -104,8 +83,6 @@ pipeline {
                 }
             }
         }
-
-
         
     }
     post {
