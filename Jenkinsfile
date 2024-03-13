@@ -74,15 +74,17 @@ pipeline {
             steps {
                 script {
                    // Forma 2 - File Spec
+                    sh "env | sort"
+
                     def server = Artifactory .server 'artifactory'
                     def repository = 'spring-petclinic-rest'
 
-                    if("${GIT_BRANCH }" == 'origin/master' ){
-                    repository = repository + '-release'
+                    if("${GIT_BRANCH}" == 'origin/master' ){
+                        repository = repository + '-release'
                     } else {
-                    repository = repository + '-snapshop'
+                        repository = repository + '-snapshop'
                     }
-                    
+
                     def uploadSpec = """
                     {
                         "files": [
