@@ -94,7 +94,7 @@ pipeline {
                             "files": [
                                 {
                                     "pattern": "target/.*.jar",
-                                    "target": "${repository}",
+                                    "target": "${repository}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
                                     "regexp": "true"
                                 }
                             ]
