@@ -60,7 +60,7 @@ pipeline {
                     // env.MAVEN_HOME = '/usr/share/maven'
 
                     def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    def snapshots = 'spring-petclinic-rest-snapshop'
                     def server = Artifactory.server 'artifactory'
                     def rtMaven = Artifactory.newMavenBuild()
                     rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
